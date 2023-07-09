@@ -1,4 +1,4 @@
-use actix_web::{ App, HttpServer, Responder, HttpRequest, handler };
+use actix_web::{ App, HttpServer, HttpResponse, HttpRequest, handler };
 
 // pub struct greet;
 // impl ::actix_web::dev::HttpServiceFactory for greet {
@@ -16,16 +16,15 @@ use actix_web::{ App, HttpServer, Responder, HttpRequest, handler };
 // }
 
 #[handler("/")]
-async fn greet(req: HttpRequest) -> impl Responder {
-     let name = req.match_info().get("name").unwrap_or("World");
-     format!("Hello, {}!", &name)
+async fn example(_req: HttpRequest) -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(greet)        
+            .service(example)        
     })
     .bind("127.0.0.1:8080")?
     .run()
