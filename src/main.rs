@@ -70,12 +70,19 @@ async fn test() -> HttpResponse {
                 .configure(scope_config)
 
 */
- 
+//async fn test2() -> impl actix_web::Responder {
+//    actix_web::HttpResponse::Ok().finish()
+//}
 #[actix_web::scope("/works")]
 const mod_inner: () = {    
     #[actix_web::get("/test")]
-    pub async fn test() -> impl Responder {
-        HttpResponse::Ok().finish()
+    #[doc("This is a test function")]
+    pub async fn test() -> impl actix_web::Responder {
+        mod_inner_scope::test2()
+    }
+
+    pub fn test2() -> impl actix_web::Responder {
+        actix_web::HttpResponse::Ok().finish()
     }
 };
 
@@ -93,16 +100,15 @@ impl::actix_web::dev::HttpServiceFactory for test {
     }
 }
 */
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()>  {
-
-    HttpServer::new(|| {
+     HttpServer::new(|| {
         App::new().service(mod_inner)
     })
     .bind("127.0.0.1:8080")?
     .run()
    .await;
-
    Ok(())
 }
 /*
